@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>question app</title>
+<style>
+body{
+    font-family:Sans-Serif;
+}
+.question{
+    display:block;
+    width:80%;
+    margin:25vh auto;
+    background:lightblue;
+    color:white;
+    padding:20px;
+    border-radius:25px;
+    font-size:20px;
+    
+}
+    ol{
+        list-style-type: upper-alpha;
+    }
+    .btn{
+        display:grid;
+        grid-template-columns:auto auto;
+        justify-content: space-between;
+    }
+    button{
+        width:90px;
+        height:50px;
+        border-radius:10px;
+        border:1px solid white;
+        color:black;
+        background:white;
+    }
+    .progress{
+        height:5px;
+        width:5%;
+        background:white;
+        border-radius:5px;
+    }
+</style>
+</head>
+<body>
+    <div class="question">
+        <div class="progress"></div>
+        
+        <p></p>
+        
+        <ol>
+           
+        </ol>
+        
+        <div class="btn">
+            <button class="prev">previous</button>
+            <button class="nxt">next</button>
+        </div>
+    </div>
+    
+ <script>
+ 
+ // questions
+ let data={
+     "question":[
+         {
+             "question":"what is my name?",
+             "options":["fred","james","johanns"],
+             "ans":"johanna"
+             
+         },
+         {
+             "question":"whats do i like?",
+             "options":["dance","food","music"],
+             "ans":"music"
+         },
+         {
+             "question":"what do i do?",
+             "options":["web developer","gamer","footballer"],
+             "ans":"web developer"
+         }
+     ]
+ }
+ 
+ let ans=[];
+ let ansUser=[];
+ let score=0;
+ 
+ 
+ //adding the awsers to an array
+ for(let j=0;j<data.question.length;j++){
+    ans.push(data.question[j].ans);
+ }
+ 
+ 
+ //sellecting dom elements
+ let question=document.querySelector("p");
+ let ol=document.querySelector("ol");
+ let nxt=document.querySelector(".nxt");
+ let prev=document.querySelector(".prev");
+ let progressBar=document.querySelector('.progress');
+     
+ 
+  //timmer / progressbar loading
+ let time=100;
+ 
+ // display first question by defult
+ question.innerHTML=data.question[0].question;
+ // add option
+for(let p=0; p<data.question[0].options.length; p++){
+  let li=document.createElement("li");
+ let input=document.createElement("input");
+ input.setAttribute("type","radio");
+ input.setAttribute("name","option");
+ let span=document.createElement("span");
+ span.innerHTML=data.question[0].options[p];
+ li.appendChild(input);
+ li.appendChild(span);
+ ol.appendChild(li);
+ }
+ 
+ 
+ // tracking questions
+ let k=1;
+ 
+ //intant(starting point) of progress bar  
+ let i=5;
+ //increase progress bar
+function add(){
+   if(i<100){
+         progressBar.style.width=i++ +"%";
+        }else{
+
+          clearInterval();
+     }
+     
+}
+    
+    
+//increase the bar in time given
+setInterval(add, time);
+
+ 
+//next question function
+let nxtqst=()=>{
+    submit();
+addquestion();
+//check if thats the last question
+  if (k<data.question.length){
+       
+      k++;
+      i=5;
+  }else{
+      k+=0;
+  }
+}
+
+
+//goto next questions
+setInterval(()=>{
+    if (k<data.question.length+1){
+        nxtqst();
+    }else{
+       
+        //display score
+        clearInterval();
+    }
+},9900);
+
+
+//back to previous question
+let preqst=()=>{
+    if(k<1){
+        k+=0;
+        
+    }else{
+     
+        k--;
+        i=5;
+    }
+    addquestion();
+    
+}
+
+ 
+ //when next question btn is clicked
+ nxt.addEventListener("click",nxtqst);
+ prev.addEventListener("click",preqst);
+ 
+
+//addquestion fun
+addquestion=()=>{
+//clear the options
+if(data.question[k].options==null||data.question[k].options==undefined){
+    opt(data.question.length-1);
+}else{
+    ol.innerHTML="";
+}
+//options
+ opt(k);
+//add question
+question.innerHTML=data.question[k].question;
+}
+
+//options func
+let opt=(n)=>{
+    //loop throug option array
+for(let p=0; p<data.question[n].options.length; p++){
+ //add options
+ let li=document.createElement("li");
+ let input=document.createElement("input");
+ input.setAttribute("type","radio");
+ input.setAttribute("name","option");
+ let span=document.createElement("span");
+ span.innerHTML=data.question[k].options[p];
+ li.appendChild(input);
+ li.appendChild(span);
+ ol.appendChild(li);
+}
+}
+//add the check awsers 
+let submit=()=>{
+    for(let i=0; i<ol.children.length;i++)
+    {
+      if(ol.children[i].children[0].checked){
+ansUser.push(ol.children[i].children[1].innerHTML);
+        }
+    
+    }
+
+}
+
+//show score function 
+let showScore=()=>{
+    
+}
+
+ </script>   
+</body>
+</html>
